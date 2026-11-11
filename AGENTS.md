@@ -13,14 +13,14 @@ Keep domain rules in entities and coordinate persistence through gateway interfa
 
 ## Build, Test, and Development Commands
 
-Use mise for development tools and match the Go version declared in `go.mod` (currently `1.27.3`). No repository mise configuration or tasks are checked in; configure the matching runtime before running:
+Use the Go version declared in `go.mod` (currently `1.27.3`). Run standard Go commands directly; no runtime manager is required or assumed.
 
-- `mise exec -- go build ./...`: compile all packages.
-- `mise exec -- go test ./...`: run all tests.
-- `mise exec -- go test ./internal/entity -run TestCreditAccount`: run one focused test.
-- `mise exec -- go test -cover ./...`: report package coverage.
-- `mise exec -- go vet ./...`: run Go static checks.
-- `mise exec -- go fmt ./...`: format Go sources.
+- `go build ./...`: compile all packages.
+- `go test ./...`: run all tests.
+- `go test ./internal/entity -run TestCreditAccount`: run one focused test.
+- `go test -cover ./...`: report package coverage.
+- `go vet ./...`: run Go static checks.
+- `go fmt ./...`: format Go sources.
 
 There is currently no application command for running a server locally.
 
