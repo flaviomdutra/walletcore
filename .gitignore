@@ -1,0 +1,31 @@
+# Go build and test artifacts
+/bin/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/coverage/
+/coverage.*
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+/mise.local.toml
+/.mise.local.toml
+/.aws/
+*.pem
+*.key
+
+# Editor and operating system files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
