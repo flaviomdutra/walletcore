@@ -7,7 +7,7 @@ import (
 
 type CreateTransactionInputDTO struct {
 	AccountIDFrom string
-	AccountIDTo   string
+	AccountIDTO   string
 	Amount        float64
 }
 
@@ -33,7 +33,7 @@ func (uc *CreateTransactionUseCase) Execute(input CreateTransactionInputDTO) (*C
 		return nil, err
 	}
 
-	accountTo, err := uc.AccountGateway.FindByID(input.AccountIDTo)
+	accountTo, err := uc.AccountGateway.FindByID(input.AccountIDTO)
 	if err != nil {
 		return nil, err
 	}
