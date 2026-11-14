@@ -2,7 +2,10 @@ module github.com/flaviomdutra/walletcore
 
 go 1.27.3
 
-require github.com/stretchr/testify v1.12.1
+require (
+	github.com/mattn/go-sqlite3 v1.14.53
+	github.com/stretchr/testify v1.12.1
+)
 
 require (
 	github.com/stretchr/objx v0.5.3 // indirect
