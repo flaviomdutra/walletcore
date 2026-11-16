@@ -2,18 +2,20 @@
 
 ## Project Structure & Module Organization
 
-This Go module implements wallet domain logic under `internal/`:
+This Go module implements wallet domain logic under `internal/` and event dispatching under `pkg/`:
 
 - `internal/entity/`: clients, accounts, transactions, and domain validation.
 - `internal/gateway/`: persistence interfaces used by application logic.
+- `internal/database/`: SQL database adapters for clients, accounts, and transactions.
 - `internal/usecase/create_client/`, `create_account/`, and `create_transaction/`: application workflows and input/output DTOs.
+- `pkg/events/`: event and handler interfaces plus an in-memory event dispatcher.
 - Tests live beside the code in `*_test.go` files.
 
-Keep domain rules in entities and coordinate persistence through gateway interfaces in use cases. No executable entry point, assets directory, or concrete persistence adapter currently exists.
+Keep domain rules in entities and coordinate persistence through gateway interfaces in use cases. Database adapters implement those interfaces. The event dispatcher registers handlers by event name, prevents duplicate registrations, checks registrations with `Has`, and dispatches events to registered handlers. There is no executable entry point or server command.
 
 ## Build, Test, and Development Commands
 
-Use the Go version declared in `go.mod` (currently `1.27.3`). Run standard Go commands directly; no runtime manager is required or assumed.
+Use the Go version declared in `go.mod` (currently `1.27.3`). Run standard Go commands directly.
 
 - `go build ./...`: compile all packages.
 - `go test ./...`: run all tests.

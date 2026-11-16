@@ -9,6 +9,8 @@ WalletCore is a Go project that implements core wallet operations: creating clie
 - Credit and debit account balances.
 - Transfer funds with positive-amount and sufficient-balance checks.
 - Coordinate persistence through injectable gateway interfaces.
+- Persist clients, accounts, and transactions through SQL database adapters.
+- Register event handlers and dispatch events to handlers by event name.
 
 ## Project Structure
 
@@ -16,13 +18,17 @@ WalletCore is a Go project that implements core wallet operations: creating clie
 internal/
 ├── entity/                     # Domain models, validation, and unit tests
 ├── gateway/                    # Client, account, and transaction interfaces
+├── database/                   # SQL persistence adapters
 └── usecase/
     ├── create_client/          # Client creation workflow
     ├── create_account/         # Account creation workflow
     └── create_transaction/     # Transfer workflow
 ```
 
-Use cases accept input DTOs, operate on entities, and return output DTOs. Gateway implementations are supplied by callers. Tests live alongside their source files and use Go's testing package with Testify assertions and mocks.
+pkg/
+└── events/                     # Event interfaces and in-memory dispatcher
+
+Use cases accept input DTOs, operate on entities, and return output DTOs. Database adapters provide SQL-backed gateway implementations. The event dispatcher supports handler registration, duplicate-registration checks, membership checks, clearing registrations, and dispatch by event name. Tests live alongside their source files and use Go's testing package with Testify assertions and mocks.
 
 ## Getting Started
 
@@ -33,7 +39,7 @@ go mod download
 go build ./...
 ```
 
-The project currently contains domain and application packages. There is no executable entry point, HTTP API, database adapter, or server command.
+The project currently contains domain, application, SQL persistence, and event dispatching packages. There is no executable entry point, HTTP API, or server command.
 
 ## Development
 
