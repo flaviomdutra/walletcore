@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/flaviomdutra/walletcore/internal/usecase/create_client"
@@ -21,21 +22,21 @@ func (h *WebClientHandler) CreateClient(w http.ResponseWriter, r *http.Request) 
 	var dto create_client.CreateClientInputDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, "invalid JSON request body", http.StatusBadRequest)
 		return
 	}
 
 	output, err := h.CreateClientUseCase.Execute(dto)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("create client failed: %v", err)
+		http.Error(w, "could not create client", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(output)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(output); err != nil {
+		log.Printf("encode create client response failed: %v", err)
 		return
 	}
-	w.WriteHeader(http.StatusCreated)
 }

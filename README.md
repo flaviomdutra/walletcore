@@ -39,7 +39,16 @@ go mod download
 go build ./...
 ```
 
-The project currently contains domain, application, SQL persistence, and event dispatching packages. There is no executable entry point, HTTP API, or server command.
+The HTTP API is available from `cmd/walletcore`.
+
+Start MySQL and the API from the repository root:
+
+```sh
+docker compose up -d mysql
+go run ./cmd/walletcore
+```
+
+The server connects to MySQL at `127.0.0.1:3306` by default. Set `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, or `DB_NAME` to override the connection settings. The Compose initialization script creates the database tables when MySQL initializes an empty data directory.
 
 ## Development
 

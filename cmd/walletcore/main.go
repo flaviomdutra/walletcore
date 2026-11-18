@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	"github.com/flaviomdutra/walletcore/internal/database"
 	"github.com/flaviomdutra/walletcore/internal/event"
@@ -16,7 +17,13 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "mysql", "3306", "wallet"))
+	dbHost := envOrDefault("DB_HOST", "127.0.0.1")
+	dbPort := envOrDefault("DB_PORT", "3306")
+	dbUser := envOrDefault("DB_USER", "root")
+	dbPassword := envOrDefault("DB_PASSWORD", "root")
+	dbName := envOrDefault("DB_NAME", "wallet")
+
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", dbUser, dbPassword, dbHost, dbPort, dbName))
 	if err != nil {
 		panic(err)
 	}
@@ -50,4 +57,11 @@ func main() {
 	webserver.AddHandler("/transaction", transactionHandler.CreateTransaction)
 
 	webserver.Start()
+}
+
+func envOrDefault(key, fallback string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return fallback
 }
