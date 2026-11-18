@@ -12,6 +12,7 @@
 /coverage.*
 
 # Local configuration and credentials
+.docker/
 .env
 .env.*
 !.env.example
