@@ -22,7 +22,7 @@ import (
 )
 
 func main() {
-	dbHost := envOrDefault("DB_HOST", "127.0.0.1")
+	dbHost := envOrDefault("DB_HOST", "mysql")
 	dbPort := envOrDefault("DB_PORT", "3306")
 	dbUser := envOrDefault("DB_USER", "root")
 	dbPassword := envOrDefault("DB_PASSWORD", "root")
@@ -35,7 +35,7 @@ func main() {
 	defer db.Close()
 
 	configMap := ckafka.ConfigMap{
-		"bootstrap.servers": "kafka:9094",
+		"bootstrap.servers": "kafka:29092",
 		"group.id":          "wallet",
 	}
 
@@ -65,7 +65,7 @@ func main() {
 		transactionCreatedEvent,
 	)
 
-	webserver := webserver.NewWebServer(":3000")
+	webserver := webserver.NewWebServer(":8080")
 
 	clientHandler := web.NewWebClientHandler(*createClientUseCase)
 	accountHandler := web.NewWebAccountHandler(*createAccountUseCase)
