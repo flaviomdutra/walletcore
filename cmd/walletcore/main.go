@@ -6,14 +6,17 @@ import (
 	"fmt"
 	"os"
 
+	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/flaviomdutra/walletcore/internal/database"
 	"github.com/flaviomdutra/walletcore/internal/event"
+	"github.com/flaviomdutra/walletcore/internal/event/handler"
 	"github.com/flaviomdutra/walletcore/internal/usecase/create_account"
 	"github.com/flaviomdutra/walletcore/internal/usecase/create_client"
 	"github.com/flaviomdutra/walletcore/internal/usecase/create_transaction"
 	"github.com/flaviomdutra/walletcore/internal/web"
 	"github.com/flaviomdutra/walletcore/internal/web/webserver"
 	"github.com/flaviomdutra/walletcore/pkg/events"
+	"github.com/flaviomdutra/walletcore/pkg/kafka"
 	"github.com/flaviomdutra/walletcore/pkg/uow"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -31,9 +34,16 @@ func main() {
 	}
 	defer db.Close()
 
+	configMap := ckafka.ConfigMap{
+		"bootstrap.servers": "kafka:9094",
+		"group.id":          "wallet",
+	}
+
+	kafkaProducer := kafka.NewKafkaProducer(&configMap)
+
 	eventDispatcher := events.NewEventDispatcher()
+	eventDispatcher.Register("TransactionCreated", handler.NewTransactionCreatedKafkaHandler(kafkaProducer))
 	transactionCreatedEvent := event.NewTransactionCreated()
-	// eventDispatcher.Register("TransactionCreated", handler)
 
 	clientDB := database.NewClientDB(db)
 	accountDB := database.NewAccountDB(db)
