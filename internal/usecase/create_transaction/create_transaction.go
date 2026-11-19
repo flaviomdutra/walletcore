@@ -102,7 +102,7 @@ func (uc *CreateTransactionUseCase) getAccountRepository(ctx context.Context) ga
 }
 
 func (uc *CreateTransactionUseCase) getTransactionRepository(ctx context.Context) gateway.TransactionGateway {
-	repo, err := uc.Uow.GetRepository(ctx, "TransctionDB")
+	repo, err := uc.Uow.GetRepository(ctx, "TransactionDB")
 	if err != nil {
 		panic(err)
 	}
