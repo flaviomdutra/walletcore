@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"os"
@@ -13,6 +14,7 @@ import (
 	"github.com/flaviomdutra/walletcore/internal/web"
 	"github.com/flaviomdutra/walletcore/internal/web/webserver"
 	"github.com/flaviomdutra/walletcore/pkg/events"
+	"github.com/flaviomdutra/walletcore/pkg/uow"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -35,13 +37,20 @@ func main() {
 
 	clientDB := database.NewClientDB(db)
 	accountDB := database.NewAccountDB(db)
-	transactionDB := database.NewTransactionDB(db)
 
+	ctx := context.Background()
+	uow := uow.NewUow(ctx, db)
+	uow.Register("AccountDB", func(tx *sql.Tx) interface{} {
+		return database.NewAccountDB(db)
+	})
+
+	uow.Register("TransactionDB", func(tx *sql.Tx) interface{} {
+		return database.NewTransactionDB(db)
+	})
 	createClientUseCase := create_client.NewCreateClientUseCase(clientDB)
 	createAccountUseCase := create_account.NewCreateAccountUseCase(accountDB, clientDB)
 	createTransactionUseCase := create_transaction.NewCreateTransactionUseCase(
-		transactionDB,
-		accountDB,
+		uow,
 		eventDispatcher,
 		transactionCreatedEvent,
 	)
